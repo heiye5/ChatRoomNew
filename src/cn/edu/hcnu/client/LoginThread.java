@@ -89,7 +89,7 @@ public class LoginThread extends Thread {
                 PreparedStatement pstmt = null;
                 String sql = "";
                 try {
-                    String url = "jdbc:oracle:thin:@localhost:1521:orclhc";
+                    String url = "jdbc:oracle:thin:@localhost:1521:orcl";
                     String username_db = "opts";
                     String password_db = "opts1234";
                     Connection conn = DriverManager.getConnection(url, username_db, password_db);
@@ -127,6 +127,8 @@ public class LoginThread extends Thread {
                             pstmt.setString(4, username);
                             pstmt.executeUpdate();
                             loginf.setVisible(false);
+
+
                             ChatThreadWindow chatThreadWindow = new ChatThreadWindow(username,ds);
                         } else {
                             System.out.println("登录失败");

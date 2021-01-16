@@ -49,6 +49,8 @@ public class ChatThreadWindow {
         f.getContentPane().add(p, BorderLayout.SOUTH);
         f.getContentPane().add(sp);
         f.setVisible(true);
+
+        //使用线程，this代表传入当前对象
         GetMessageThread getMessageThread = new GetMessageThread(this);
         getMessageThread.start();
 
@@ -59,14 +61,14 @@ public class ChatThreadWindow {
     }
 
     public void showXXXIntoChatRoom() {
-        String url = "jdbc:oracle:thin:@localhost:1521:orclhc";
+        String url = "jdbc:oracle:thin:@localhost:1521:orcl";
         String username_db = "opts";
         String password_db = "opts1234";
         PreparedStatement pstmt = null;
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url, username_db, password_db);
-            String sql = "SELECT username,ip,port FROM users WHERE status='online'";
+            String sql = "SELECT username,ip,port FROM users WHERE status=1";
             pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -83,12 +85,17 @@ public class ChatThreadWindow {
                 }
                 if(!username.equals(name)){
                     String message = name+"进入了聊天室";
+
                     byte[] m = message.getBytes();
                     DatagramPacket dp = new DatagramPacket(m, m.length);
+
                     dp.setAddress(InetAddress.getByAddress(ipB));
+                    //设置端口
                     dp.setPort(port);
+
                     DatagramSocket ds = new DatagramSocket();
-                    ds.send(dp);//投递
+                    //发送
+                    ds.send(dp);
                 }
             }
         } catch (SQLException | UnknownHostException | SocketException e) {
